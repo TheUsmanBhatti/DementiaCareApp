@@ -7,8 +7,14 @@ import axios from 'axios';
 // create a component
 import { showMessage, hideMessage } from "react-native-flash-message";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { BASE_URL } from './baseURL';
+import { saveUserData } from '../redux/userSlice';
+import { useDispatch } from 'react-redux';
+
 
 const Login = ({ navigation }) => {
+
+    const dispatch = useDispatch()
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -35,14 +41,18 @@ const Login = ({ navigation }) => {
             }
 
 
-            const response = await axios.post('http://192.168.0.110:3333/api/users/signin', {
+            const response = await axios.post(`${BASE_URL}/api/users/signin`, {
                 "email": email.trim().toLowerCase(),
                 "password": password.trim(),
             })
 
             if (response?.data?.signIn == true) {
                 setLoading(false)
-                navigation.navigate('Home', response?.data?.user)
+
+                const userData = await AsyncStorage.setItem('@UserData', JSON.stringify(response?.data?.user))
+                const user = response?.data?.user;
+                dispatch(saveUserData(user))
+                navigation.reset({ index: 0, routes: [{ name: 'Home', params: {user} }] })
             }
 
         } catch (error) {

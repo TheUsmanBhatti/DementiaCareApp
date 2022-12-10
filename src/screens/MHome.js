@@ -11,6 +11,7 @@ import Moment from 'moment';
 const { width, height } = Dimensions.get('window')
 
 import axios from 'axios';
+import { BASE_URL } from './baseURL';
 
 const MHome = ({ navigation, user }) => {
 
@@ -31,6 +32,8 @@ const MHome = ({ navigation, user }) => {
     const openGallery = async () => {
 
         const options = {
+            maxHeight: 1000,
+            maxWidth: 1000,
             storageOptions: {
                 path: 'images',
                 mediaType: 'photo',
@@ -97,7 +100,7 @@ const MHome = ({ navigation, user }) => {
 
             console.log('FormData  ', formdata)
 
-            fetch(`http://192.168.0.110:3333/api/photos`, {
+            fetch(`${BASE_URL}/api/photos`, {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -133,7 +136,7 @@ const MHome = ({ navigation, user }) => {
 
     const getPhotosList = async () => {
         try {
-            const response = await axios.get(`http://192.168.0.110:3333/api/photos/user/${user?._id}`)
+            const response = await axios.get(`${BASE_URL}/api/photos/user/${user?._id}`)
 
             if (response?.data) {
                 return response?.data
@@ -167,7 +170,7 @@ const MHome = ({ navigation, user }) => {
     return (
         <View style={styles.container}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Image source={{uri: `http://192.168.0.110:3333${user?.avatar}`}} style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: 'gray' }} />
+                <Image source={{uri: `${BASE_URL}/${user?.avatar}`}} style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: 'gray' }} />
 
                 <View style={{ marginLeft: 10 }}>
                     <Text style={{ fontSize: 16, color: '#9023c0', fontFamily: 'Playfair-Regular' }}>Hi,</Text>
@@ -183,8 +186,7 @@ const MHome = ({ navigation, user }) => {
                     <TouchableOpacity
                         onPress={() => navigation.navigate('PhotosDetail', {item})}
                         style={{ marginVertical: 5, backgroundColor: '#fff', borderWidth: 1, borderColor: '#d5d5d5', borderRadius: 10, padding: 7, flexDirection: 'row' }}>
-                        <Image source={{uri: `http://192.168.0.110:3333${item?.images[0]}`}} style={{ width: 80, height: 80, backgroundColor: 'gray', borderRadius: 10 }} />
-                        {console.log(`http://192.168.0.110:3333${item?.images[0]}`)}
+                        <Image source={{uri: `${BASE_URL}/${item?.images[0]}`}} style={{ width: 80, height: 80, backgroundColor: 'gray', borderRadius: 10 }} />
                         <View style={{ marginLeft: 7, flex: 1, justifyContent: 'space-between' }}>
                             <Text style={{ fontFamily: 'Nunito-Bold', color: '#9023c0', fontSize: 16 }}>{item?.title}</Text>
 

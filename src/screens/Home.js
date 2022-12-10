@@ -8,19 +8,14 @@ import Profile from './Profile';
 
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSelector } from 'react-redux';
 // create a component
 const Home = ({ navigation, route }) => {
 
     const [tab, setTab] = useState('home');
-    // const [user, setUser] = useState()
+    // const { user } = route.params;
 
-    // const getUserData = async () => {
-    //     const data = await AsyncStorage.getItem('userDataA');
-    //     setUser(JSON.parse(data))
-    // }
-    // getUserData()
-    const user = route.params
-
+    const user = useSelector(state => state?.user?.userData)
 
     return (
         <View style={styles.container}>
