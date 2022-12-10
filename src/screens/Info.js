@@ -2,9 +2,12 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, NativeModules, ScrollView, ActivityIndicator } from 'react-native';
 
+import { validate } from 'react-email-validator';
 import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import { showMessage, hideMessage } from "react-native-flash-message";
+import { BASE_URL } from './baseURL';
+
 
 const { RNNetworkInfo } = NativeModules;
 // create a component
@@ -32,16 +35,27 @@ const Info = ({ navigation, route }) => {
     const handleSignUp = async () => {
         try {
             
-
             if (email.trim() == '') {
                 return showMessage({
                     message: "Please enter your email",
                     backgroundColor: '#9023c0'
                 })
             }
+            if (!validate(email.trim())) {
+                return showMessage({
+                    message: "Please enter valid Email",
+                    backgroundColor: '#9023c0'
+                })
+            }
             if (password.trim() == '') {
                 return showMessage({
                     message: "Please enter your password",
+                    backgroundColor: '#9023c0'
+                })
+            }
+            if (password.trim().length < 8) {
+                return showMessage({
+                    message: "Password length must be greater than 8",
                     backgroundColor: '#9023c0'
                 })
             }
@@ -53,7 +67,7 @@ const Info = ({ navigation, route }) => {
             }
 
             setLoading(true)
-            const response = await axios.post('http://192.168.0.110:3333/api/users/signup', {
+            const response = await axios.post(`${BASE_URL}/api/users/signup`, {
                 "email": email.trim().toLowerCase(),
                 "password": password.trim(),
                 "name": name.trim(),
@@ -71,8 +85,12 @@ const Info = ({ navigation, route }) => {
             }
 
         } catch (error) {
-            false
+            setLoading(false)
             console.log('Error  ', error)
+            showMessage({
+                message: error?.response?.data?.message,
+                backgroundColor: '#9023c0'
+            })
         }
     }
 

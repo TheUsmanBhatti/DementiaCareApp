@@ -5,18 +5,22 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, ScrollView 
 import Icon from 'react-native-vector-icons/Ionicons';
 // create a component
 import Moment from 'moment';
+import { BASE_URL } from './baseURL';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Profile = ({ user }) => {
+const Profile = ({ user, navigation }) => {
 
     const [name, setName] = useState('')
 
+    console.log(`${BASE_URL}${user?.avatar}`)
+
     return (
         <ScrollView
-        showsVerticalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
         >
             <View style={styles.container}>
 
-                <Image source={{ uri: `http://192.168.0.110:3333${user?.avatar}` }} style={{ width: 120, height: 120, backgroundColor: 'gray', alignSelf: 'center', borderRadius: 100, marginVertical: 30 }} />
+                <Image source={{ uri: `${BASE_URL}/${user?.avatar}` }} style={{ width: 120, height: 120, backgroundColor: 'gray', alignSelf: 'center', borderRadius: 100, marginVertical: 30 }} />
 
                 <View style={{ backgroundColor: 'rgba(144, 35, 192, 0.1)', borderRadius: 15 }}>
                     <View style={{ flexDirection: 'row', padding: 10, borderBottomWidth: 1, borderBottomColor: '#d5d5d5' }}>
@@ -40,15 +44,31 @@ const Profile = ({ user }) => {
                     </View>
                 </View>
 
-                <TouchableOpacity style={{ backgroundColor: 'rgba(144, 35, 192, 0.2)', padding: 10, borderRadius: 10, marginVertical: 15 }}>
+                <TouchableOpacity
+                    onPress={() => navigation.navigate('EmergencyContact')}
+                    style={{ backgroundColor: 'rgba(144, 35, 192, 0.2)', padding: 10, borderRadius: 10, marginTop: 15 }}>
+                    <Text style={{ width: '50%', fontFamily: 'Nunito-Bold', fontSize: 16, color: '#000' }}>Emergency Contact</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    onPress={() => navigation.navigate('EditProfile')}
+                    style={{ backgroundColor: 'rgba(144, 35, 192, 0.2)', padding: 10, borderRadius: 10, marginVertical: 15 }}>
                     <Text style={{ width: '50%', fontFamily: 'Nunito-Bold', fontSize: 16, color: '#000' }}>Edit Profile</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={{ backgroundColor: 'rgba(144, 35, 192, 0.2)', padding: 10, borderRadius: 10 }}>
+                <TouchableOpacity
+                    onPress={() => navigation.navigate('UpdatePassword')}
+                    style={{ backgroundColor: 'rgba(144, 35, 192, 0.2)', padding: 10, borderRadius: 10 }}>
                     <Text style={{ width: '50%', fontFamily: 'Nunito-Bold', fontSize: 16, color: '#000' }}>Update Password</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={{ backgroundColor: 'rgba(144, 35, 192, 0.2)', padding: 10, borderRadius: 10, marginVertical: 15 }}>
+                <TouchableOpacity
+                    onPress={async () => {
+                        await AsyncStorage.clear()
+                        navigation.reset({ index: 0, routes: [{ name: 'SignIn' }] })
+                    }}
+
+                    style={{ backgroundColor: 'rgba(144, 35, 192, 0.2)', padding: 10, borderRadius: 10, marginVertical: 15 }}>
                     <Text style={{ width: '50%', fontFamily: 'Nunito-Bold', fontSize: 16, color: '#000' }}>Logout</Text>
                 </TouchableOpacity>
 

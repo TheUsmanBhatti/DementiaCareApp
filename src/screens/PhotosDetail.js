@@ -5,6 +5,7 @@ import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, Dimensions, 
 import Tts from 'react-native-tts';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Moment from 'moment';
+import { BASE_URL } from './baseURL';
 
 // create a component
 const PhotosDetail = ({navigation, route}) => {
@@ -39,7 +40,7 @@ const PhotosDetail = ({navigation, route}) => {
                 pagingEnabled
                 renderItem={({ item }) => (
                     <TouchableOpacity>
-                        <Image source={{ uri: `http://192.168.0.110:3333${item}` }} style={{ width: width * 0.949, height: height * 0.6, margin: 10, backgroundColor: 'gray', borderRadius: 15 }} />
+                        <Image source={{ uri: `${BASE_URL}/${item}` }} style={{ width: width * 0.949, height: height * 0.6, margin: 10, backgroundColor: 'gray', borderRadius: 15 }} />
                     </TouchableOpacity>
                 )}
             />
